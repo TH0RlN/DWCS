@@ -27,11 +27,11 @@
             </tr>
             <tr>
                 <td><label for="reside">Reside en la zona: </label></td>
-                <td><input type="radio" name="reside" id="resSi" value="si" > Sí</td>
+                <td><input type="radio" name="reside" id="resSi" value="si" <?php if(isset($_POST["reside"]) && $_POST["reside"] == 'si') echo 'checked';?>> Sí</td>
             </tr>
             <tr>
                 <td></td>
-                <td><input type="radio" name="reside" id="resNo" value="no"> No</td>
+                <td><input type="radio" name="reside" id="resNo" value="no" <?php if(isset($_POST["reside"]) && $_POST["reside"] == 'no') echo 'checked'?>> No</td>
             </tr>
             <tr><td colspan="2"><input type="submit" name="submit" value="Enviar"><td><tr>
         </table>
@@ -68,10 +68,18 @@
                 $check = true;
             }
             
-            if (empty($_POST['reside']))
+            if (empty($_POST['reside']) || ($_POST['reside'] != 'si' && $_POST['reside'] != 'no'))
             {
                 $result .= "<p>Selecciona una opción de resindencia</p>";
                 $check = true;
+            }
+            
+            if (!(is_numeric($_POST['edad'])) || $_POST['edad']  > 150 || $_POST['edad'] < 14)
+            {
+                if ($_POST['edad'] < 14)
+                    $result .= "<p>Hay que tener más de 14 años para poder registrarse</p>";
+                $result .= "<p>Introduzca una edad adecuada</p>";
+                $check = true;                    
             }
             
             if ($check)
