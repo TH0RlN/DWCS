@@ -1,6 +1,6 @@
 <?php
 
-$cook = setcookie("nuevaCookie", "nuevo valor", time() + 3000, "/ruta", "midominio.com", true);
+$cook = setcookie("nuevaCookie", "nuevo valor", time() + 3000, "/ruta", "", true);
 if ($cook)
     echo "La petición de la creación de la cookie se envió con éxito";
 
