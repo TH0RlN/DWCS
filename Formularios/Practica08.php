@@ -51,12 +51,31 @@
             "Gran Bretaña"  => "lon",
         ));
         
-        if (!empty($_POST['submit']) && !empty($_POST['city']))
+        if (!empty($_POST['submit']))
         {
-             if (array_key_exists($_POST['city'], CITIES))
-             {
-                 echo COUNTRIES[$_POST['city']];
-             }
+            if (!empty($_POST['city']))
+            {
+                if (array_key_exists($_POST['city'], CITIES))
+                {
+                    $country = array_search($_POST['city'], COUNTRIES);
+                    if ($country)
+                    {
+                        echo "<p>". CITIES[$_POST['city']] . " está en " . $country . "</p>";
+                    }
+                    else
+                    {
+                        echo "<p>No se encuentra el país</p>";
+                    }
+                }
+                else
+                {
+                    echo "<p>Ha introducido un dato no válido</p>";
+                }
+            }
+            else
+            {
+                echo "<p>Por favor seleccione una ciudad</p>";
+            }
         }
     ?>
 </body>
