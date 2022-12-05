@@ -1,0 +1,18 @@
+<html>
+    <head>
+        <title>Envío de varios ficheros</title>		
+        <meta charset = "UTF-8">
+    </head>
+    <body>
+        <form enctype="multipart/form-data" action="Practica10.php" method="POST">
+            <p>Ficheiros a enviar: </p>
+            <div id="div">
+                <input name="file[]" type="file" id="files1"><br>
+            </div>
+            <input type="submit" value="Enviar">
+        </form>
+    </body>
+    <footer>
+        <script src="./Practica10.js"></script>
+    </footer>
+</html>

@@ -1,0 +1,1 @@
+localhost/PhpProject1/Formularios/1_hola_nombre.php?nombre="Ana"
