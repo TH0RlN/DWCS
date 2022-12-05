@@ -6,12 +6,12 @@ if ($mysqli->connect_error) {
             $mysqli->connect_error);
 }
 
-$sql = "SELECT id_artista, nombre_artista FROM artistas";
+$sql = "SELECT id_artista, nombre_artista, pais_artista FROM artistas WHERE pais_artista <> 'USA'";
 if ($result = $mysqli->query($sql)) // clase mysqli_result
     if ($result->num_rows > 0) {
         while ($fila = $result->fetch_object())
             echo $fila->id_artista . ":" .
-            $fila->nombre_artista . "<br>\n";
+            $fila->nombre_artista . ":" . $fila->pais_artista ."<br>\n";
         $result->close();
     } else
         echo "No se han encontrado registros.";
