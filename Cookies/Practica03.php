@@ -1,33 +1,38 @@
 <?php
-    function preselected(string $choice, string $type) : string
+    function preselected(string $choice, string $name) : string
     {
-        if(!empty($_POST[$type]))
+        if(!empty($_POST[$name]))
         {
-            if ($_POST[$type] == $choice)
-                return $type == 'seat' ? 'checked' : 'selected';
+            if ($_POST[$name] == $choice)
+                return $name == 'seat' ? 'checked' : 'selected';
             return '';
         }
         else
         {
+			if (!empty($_COOKIE[$name]) && $_COOKIE[$name] == $choice)
+				return $name == 'seat' ? 'checked' : 'selected';
             return '';
         }
     }
     
-    function prechecked(string $choice, string $name) : string
+    function prechecked(string $choice, string $name, string $separator) : string
     {
         if (!empty($_POST[$name]))
         {
             if (in_array($choice, $_POST[$name]))
                 return 'checked';
-            else
-                return '';
+			return '';
         }
         else
+		{
+			if (!empty($_COOKIE[$name]) && in_array($choice, explode($separator, $_COOKIE[$name])))
+				return 'checked';
             return '';
+		}
         
     }
 
-	function checkall() : bool
+	function checkallPost() : bool
 	{
 		if (empty($_POST['name']))
 			return false;
@@ -40,10 +45,17 @@
 		return true;
 	}
 
-	//if (isset($_POST['submit']) && checkall())
-	//{
-	//	
-	//}
+	$cooks = "";
+	if (isset($_POST['submit']) && checkallPost())
+	{
+		$cook1 = setcookie('name', $_POST['name'], time() + (60 * 60 * 24));
+		$cook2 = setcookie('seat', $_POST['seat'], time() + (60 * 60 * 24));
+		$cook3 = setcookie('menu', $_POST['menu'], time() + (60 * 60 * 24));
+		$cook4 = setcookie('ports', implode('.', $_POST['ports']), time() + (60 * 60 * 24));
+
+		if ($cook1 & $cook2 & $cook3 & $cook4)
+			$cooks = "Se enviaron las peticiones de creación de las cookies";
+	}
 ?>
 
 <!DOCTYPE html>
@@ -67,7 +79,7 @@
 <body>
     <form action="<?php echo htmlentities($_SERVER['PHP_SELF'])?>" method="post">
 		<div>
-			<div><label for="name">Nombre: </label><input type="text" name="name" id="name" value="<?php echo !empty($_POST['name']) ? $_POST['name'] : '';?>"></div>
+			<div><label for="name">Nombre: </label><input type="text" name="name" id="name" value="<?php echo !empty($_POST['name']) ? $_POST['name'] : (!empty($_COOKIE['name']) ? $_COOKIE['name'] : '');?>"></div>
 			<div>
 				<label for="seat">Asiento: </label>
 				<input type="radio" name="seat" id="aisle" value="A" <?php echo preselected('A', 'seat');?>><label for="aisle">Pasillo</label>
@@ -86,17 +98,18 @@
 			</div>
 			<div>
 				<label for="ports[]">Aeropuertos: </label>
-				<input type="checkbox" name="ports[]" id="london" value="LHR" <?php echo prechecked('LHR', 'ports');?>><label for="london">Londres</label>
-				<input type="checkbox" name="ports[]" id="paris" value="CDG" <?php echo prechecked('CDG', 'ports');?>><label for="paris">París</label>
-				<input type="checkbox" name="ports[]" id="roma" value="CIA" <?php echo prechecked('CIA', 'ports');?>><label for="roma">Roma</label>
-				<input type="checkbox" name="ports[]" id="ibiza" value="IBZ" <?php echo prechecked('IBZ', 'ports');?>><label for="ibiza">Ibiza</label>
-				<input type="checkbox" name="ports[]" id="singapur" value="SIN" <?php echo prechecked('SIN', 'ports');?>><label for="singapur">Singapur</label>
-				<input type="checkbox" name="ports[]" id="hongkong" value="HKG" <?php echo prechecked('HKG', 'ports');?>><label for="hongkong">Hong Kong</label>
-				<input type="checkbox" name="ports[]" id="malta" value="MLA" <?php echo prechecked('MLA', 'ports');?>><label for="malta">Malta</label>
-				<input type="checkbox" name="ports[]" id="bombay" value="BOM" <?php echo prechecked('BOM', 'ports');?>><label for="bombay">Bomnbay</label>
+				<input type="checkbox" name="ports[]" id="london" value="LHR" <?php echo prechecked('LHR', 'ports', '.');?>><label for="london">Londres</label>
+				<input type="checkbox" name="ports[]" id="paris" value="CDG" <?php echo prechecked('CDG', 'ports', '.');?>><label for="paris">París</label>
+				<input type="checkbox" name="ports[]" id="roma" value="CIA" <?php echo prechecked('CIA', 'ports', '.');?>><label for="roma">Roma</label>
+				<input type="checkbox" name="ports[]" id="ibiza" value="IBZ" <?php echo prechecked('IBZ', 'ports', '.');?>><label for="ibiza">Ibiza</label>
+				<input type="checkbox" name="ports[]" id="singapur" value="SIN" <?php echo prechecked('SIN', 'ports', '.');?>><label for="singapur">Singapur</label>
+				<input type="checkbox" name="ports[]" id="hongkong" value="HKG" <?php echo prechecked('HKG', 'ports', '.');?>><label for="hongkong">Hong Kong</label>
+				<input type="checkbox" name="ports[]" id="malta" value="MLA" <?php echo prechecked('MLA', 'ports', '.');?>><label for="malta">Malta</label>
+				<input type="checkbox" name="ports[]" id="bombay" value="BOM" <?php echo prechecked('BOM', 'ports', '.');?>><label for="bombay">Bomnbay</label>
 			</div>
 			<input type="submit" value="Enviar" name="submit">
 		</div>
 	</form>
+	<div><?php echo $cooks?></div>
 </body>
 </html>
